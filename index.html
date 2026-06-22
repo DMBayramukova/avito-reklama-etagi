@@ -8,7 +8,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
-        /* ----- RESET & BASE ----- */
         * {
             margin: 0;
             padding: 0;
@@ -27,7 +26,6 @@
             overflow-x: hidden;
         }
 
-        /* ----- ПЛАВАЮЩИЙ ГРАДИЕНТ ----- */
         .gradient-bg {
             position: fixed;
             top: 0;
@@ -46,7 +44,6 @@
             100% { background-position: 0% 50%; }
         }
 
-        /* ----- ДЕКОРАТИВНЫЕ ОРБЫ ----- */
         .orb {
             position: fixed;
             border-radius: 50%;
@@ -86,7 +83,6 @@
             100% { transform: translate(50px, -50px) scale(1.2); }
         }
 
-        /* ----- КОНТЕЙНЕР КАРТОЧКИ ----- */
         .container {
             width: 100%;
             max-width: 520px;
@@ -101,7 +97,6 @@
             transition: transform 0.3s ease;
         }
 
-        /* ----- ШАПКА ----- */
         .header {
             display: flex;
             justify-content: space-between;
@@ -149,7 +144,6 @@
             transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
 
-        /* ----- ОБЩИЕ ЭЛЕМЕНТЫ ----- */
         .step {
             display: none;
             animation: slideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -180,7 +174,6 @@
             color: #e31e24;
         }
 
-        /* ----- СЧЁТЧИК ШАГОВ ----- */
         .step-counter-text {
             display: inline-block;
             font-size: 13px;
@@ -192,7 +185,6 @@
             margin-bottom: 12px;
         }
 
-        /* ----- ВАРИАНТЫ ОТВЕТОВ С МИКРО-АНИМАЦИЕЙ ----- */
         .options {
             display: flex;
             flex-direction: column;
@@ -258,7 +250,6 @@
             100% { transform: scale(1.1); opacity: 0; }
         }
 
-        /* ----- ВЫПАДАЮЩИЙ СПИСОК С ИКОНКОЙ ----- */
         .select-wrapper {
             position: relative;
             margin-bottom: 16px;
@@ -319,7 +310,6 @@
             font-size: 12px;
         }
 
-        /* ----- ТЕКСТОВЫЕ ПОЛЯ С ИКОНКАМИ ----- */
         .input-group {
             position: relative;
             margin-bottom: 16px;
@@ -380,7 +370,6 @@
             transform: none;
         }
 
-        /* ----- ЧЕКБОКС ----- */
         .checkbox-group {
             display: flex;
             align-items: center;
@@ -431,7 +420,6 @@
             color: #1a1a1a;
         }
 
-        /* ----- БЛОК С КНОПКАМИ ДА/НЕТ ----- */
         .yesno-group {
             display: flex;
             gap: 12px;
@@ -466,7 +454,6 @@
             box-shadow: 0 0 0 4px rgba(198, 40, 40, 0.1);
         }
 
-        /* ----- КНОПКИ НАВИГАЦИИ ----- */
         .nav-buttons {
             display: flex;
             gap: 12px;
@@ -529,7 +516,6 @@
             background: #f5f5f5;
         }
 
-        /* ----- ТОСТ ----- */
         .toast {
             display: none;
             margin-top: 16px;
@@ -552,7 +538,6 @@
             display: block;
         }
 
-        /* ----- ФИНАЛ ----- */
         .final-icon {
             font-size: 64px;
             text-align: center;
@@ -578,7 +563,6 @@
             margin-bottom: 8px;
         }
 
-        /* ===== ИСПРАВЛЕННАЯ МАСКА ВВОДА ТЕЛЕФОНА ===== */
         .phone-input-wrapper {
             position: relative;
         }
@@ -597,7 +581,6 @@
             pointer-events: none;
             z-index: 3;
         }
-        /* Иконка телефона теперь слева от +7, но не перекрывает её */
         .phone-input-wrapper .input-icon {
             left: 48px;
             z-index: 2;
@@ -607,7 +590,6 @@
             color: #e31e24;
         }
 
-        /* ----- КОНФЕТТИ ----- */
         .confetti-container {
             position: fixed;
             top: 0;
@@ -630,7 +612,6 @@
             100% { transform: translateY(110vh) rotate(720deg); opacity: 0; }
         }
 
-        /* ----- АДАПТИВ ----- */
         @media (max-width: 440px) {
             .container { padding: 24px 18px 28px; }
             .step-title { font-size: 21px; }
@@ -666,17 +647,14 @@
 </head>
 <body>
 
-<!-- Фоновый градиент -->
 <div class="gradient-bg"></div>
 <div class="orb orb-1"></div>
 <div class="orb orb-2"></div>
 <div class="orb orb-3"></div>
 
-<!-- Конфетти-контейнер -->
 <div class="confetti-container" id="confettiContainer"></div>
 
 <div class="container" id="app">
-    <!-- Шапка -->
     <div class="header">
         <div class="logo">
             Этажи <span>|</span>
@@ -690,7 +668,6 @@
         </div>
     </div>
 
-    <!-- ===== ШАГ 1: Цель ===== -->
     <div class="step active" data-step="1">
         <div class="step-counter-text">Вопрос 1 из 6</div>
         <div class="step-title">Что вы хотите сделать?</div>
@@ -704,7 +681,6 @@
         <button class="btn-primary" id="toStep2" disabled>Далее</button>
     </div>
 
-    <!-- ===== ШАГ 2: Направление + Локация ===== -->
     <div class="step" data-step="2">
         <div class="step-counter-text">Вопрос 2 из 6</div>
         <div class="step-title">Где ищем?</div>
@@ -734,7 +710,6 @@
         </div>
     </div>
 
-    <!-- ===== ШАГ 3: Бюджет + Ипотека ===== -->
     <div class="step" data-step="3">
         <div class="step-counter-text">Вопрос 3 из 6</div>
         <div class="step-title">Бюджет и условия</div>
@@ -758,7 +733,6 @@
         </div>
     </div>
 
-    <!-- ===== ШАГ 4: Остались вопросы? ===== -->
     <div class="step" data-step="4">
         <div class="step-counter-text">Вопрос 4 из 6</div>
         <div class="step-title">Остались ли у вас ещё вопросы?</div>
@@ -783,7 +757,6 @@
         </div>
     </div>
 
-    <!-- ===== ШАГ 5: Телефон (ИСПРАВЛЕННЫЙ) ===== -->
     <div class="step" data-step="5">
         <div class="step-counter-text">Вопрос 5 из 6</div>
         <div class="step-title">Почти готово! 📱</div>
@@ -803,7 +776,6 @@
         <div class="toast" id="toastMessage"></div>
     </div>
 
-    <!-- ===== ШАГ 6: Спасибо (финал) — убрана надпись про Telegram ===== -->
     <div class="step" data-step="6">
         <div class="final-icon">🎉</div>
         <div class="final-title">Спасибо за обращение!</div>
@@ -819,11 +791,9 @@
     (function() {
         "use strict";
 
-        // ----- КОНФИГУРАЦИЯ -----
         const BOT_TOKEN = '8914089741:AAHEu4W3x7kHKN8ii90oDa42lE1hGcn2DbE';
         const CHAT_ID = '447069488';
 
-        // ----- СОСТОЯНИЕ -----
         let currentStep = 1;
         const answers = {
             q1: null,
@@ -836,7 +806,6 @@
             phone: ''
         };
 
-        // ----- DOM-элементы -----
         const steps = document.querySelectorAll('.step');
         const progressFill = document.getElementById('progressFill');
         const stepCounter = document.getElementById('stepCounter');
@@ -862,7 +831,6 @@
         const backToStep4 = document.getElementById('backToStep4');
         const sendFinalBtn = document.getElementById('sendFinal');
 
-        // ----- ФУНКЦИИ НАВИГАЦИИ -----
         function showStep(stepNum) {
             steps.forEach((el, idx) => {
                 el.classList.toggle('active', (idx + 1) === stepNum);
@@ -884,7 +852,6 @@
             setTimeout(() => { toast.className = 'toast'; }, 5000);
         }
 
-        // ----- КОНФЕТТИ -----
         function launchConfetti() {
             const container = document.getElementById('confettiContainer');
             const colors = ['#e31e24', '#ff6b6b', '#ffd4d4', '#ff1744', '#ff8a80', '#ffebee'];
@@ -908,7 +875,6 @@
             }, 5000);
         }
 
-        // ----- ШАГ 1 -----
         q1Options.addEventListener('click', function(e) {
             const btn = e.target.closest('.option-btn');
             if (!btn) return;
@@ -923,7 +889,6 @@
             showStep(2);
         });
 
-        // ----- ШАГ 2 -----
         directionSelect.addEventListener('change', function() {
             answers.direction = this.value;
         });
@@ -944,7 +909,6 @@
             showStep(3);
         });
 
-        // ----- ШАГ 3 -----
         mortgageCheckbox.addEventListener('click', function(e) {
             mortgageInput.checked = !mortgageInput.checked;
             this.classList.toggle('active', mortgageInput.checked);
@@ -973,7 +937,6 @@
             showStep(4);
         });
 
-        // ----- ШАГ 4 -----
         questionsGroup.addEventListener('click', function(e) {
             const btn = e.target.closest('.yesno-btn');
             if (!btn) return;
@@ -1012,7 +975,6 @@
             showStep(5);
         });
 
-        // ----- ШАГ 5: Маска телефона -----
         phoneInput.addEventListener('input', function(e) {
             let value = this.value.replace(/\D/g, '');
             if (value.length > 10) value = value.slice(0, 10);
@@ -1045,7 +1007,6 @@
             showStep(4);
         });
 
-        // ----- ОТПРАВКА -----
         sendFinalBtn.addEventListener('click', function() {
             const rawPhone = phoneInput.value.replace(/\D/g, '');
             if (rawPhone.length !== 10) {
@@ -1069,28 +1030,28 @@
             };
 
             let msg = '🔹 *Новая заявка с сайта* 🔹\n\n';
-            msg += `📌 *Цель:* ${typeMap[answers.q1] || answers.q1}\n`;
+            msg += '📌 *Цель:* ' + (typeMap[answers.q1] || answers.q1) + '\n';
             if (answers.direction) {
-                msg += `🧭 *Направление:* ${directionMap[answers.direction] || answers.direction}\n`;
+                msg += '🧭 *Направление:* ' + (directionMap[answers.direction] || answers.direction) + '\n';
             }
             if (answers.location) {
-                msg += `📍 *Локация:* ${answers.location}\n`;
+                msg += '📍 *Локация:* ' + answers.location + '\n';
             }
             if (answers.budget) {
-                msg += `💰 *Бюджет:* ${answers.budget}\n`;
+                msg += '💰 *Бюджет:* ' + answers.budget + '\n';
             }
-            msg += `🏦 *Ипотека:* ${answers.mortgage ? '✅ Нужна' : '❌ Не нужна'}\n`;
+            msg += '🏦 *Ипотека:* ' + (answers.mortgage ? '✅ Нужна' : '❌ Не нужна') + '\n';
             if (answers.hasQuestions === 'yes') {
-                msg += `❓ *Вопрос:* ${answers.comment || 'не указан'}\n`;
+                msg += '❓ *Вопрос:* ' + (answers.comment || 'не указан') + '\n';
             }
-            msg += `📞 *Телефон:* +7${answers.phone}\n`;
-            msg += `🕒 ${new Date().toLocaleString()}`;
+            msg += '📞 *Телефон:* +7' + answers.phone + '\n';
+            msg += '🕒 ' + new Date().toLocaleString();
 
             sendToTelegram(msg);
         });
 
         function sendToTelegram(message) {
-            const url = `https://api.telegram.org/bot${BOT_TOKEN}/sendMessage`;
+            const url = 'https://api.telegram.org/bot' + BOT_TOKEN + '/sendMessage';
             const payload = {
                 chat_id: CHAT_ID,
                 text: message,
@@ -1125,7 +1086,6 @@
             });
         }
 
-        // ----- ИНИЦИАЛИЗАЦИЯ -----
         function initFromUrl() {
             const params = new URLSearchParams(window.location.search);
             const type = params.get('type');
@@ -1143,7 +1103,6 @@
         }
 
         initFromUrl();
-        console.log('✅ Квиз загружен. Версии: ?type=buy | ?type=sell | ?type=new | ?type=mtg');
     })();
 </script>
 </body>
