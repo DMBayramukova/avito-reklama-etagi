@@ -564,30 +564,49 @@
         }
 
         .phone-input-wrapper {
-            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: #fafafa;
+            border: 2px solid #e8e8e8;
+            border-radius: 14px;
+            transition: all 0.2s;
+            padding: 0 4px 0 14px;
         }
-        .phone-input-wrapper input {
-            padding-left: 52px;
-            padding-right: 18px;
+        .phone-input-wrapper:focus-within {
+            border-color: #e31e24;
+            background: #ffffff;
+            box-shadow: 0 0 0 4px rgba(227, 30, 36, 0.06);
+        }
+        .phone-input-wrapper .phone-icon {
+            font-size: 20px;
+            color: #999;
+            flex-shrink: 0;
+            transition: color 0.2s;
+        }
+        .phone-input-wrapper:focus-within .phone-icon {
+            color: #e31e24;
         }
         .phone-input-wrapper .prefix {
-            position: absolute;
-            left: 18px;
-            top: 50%;
-            transform: translateY(-50%);
             font-size: 16px;
             font-weight: 600;
             color: #1a1a1a;
-            pointer-events: none;
-            z-index: 3;
+            flex-shrink: 0;
         }
-        .phone-input-wrapper .input-icon {
-            left: 48px;
-            z-index: 2;
-            color: #bbb;
+        .phone-input-wrapper input {
+            flex: 1;
+            padding: 16px 14px 16px 4px;
+            font-size: 16px;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-family: inherit;
+            color: #1a1a1a;
+            min-width: 0;
         }
-        .phone-input-wrapper input:focus ~ .input-icon {
-            color: #e31e24;
+        .phone-input-wrapper input::placeholder {
+            color: #aaa;
+            font-weight: 400;
         }
 
         .confetti-container {
@@ -629,11 +648,15 @@
                 font-size: 16px;
                 left: 14px;
             }
-            .phone-input-wrapper .input-icon {
-                left: 40px;
+            .phone-input-wrapper {
+                padding: 0 4px 0 10px;
             }
             .phone-input-wrapper input {
-                padding-left: 46px;
+                padding: 14px 10px 14px 4px;
+                font-size: 15px;
+            }
+            .phone-input-wrapper .phone-icon {
+                font-size: 17px;
             }
         }
 
@@ -643,6 +666,21 @@
             margin: 0;
         }
         input[type=number] { -moz-appearance: textfield; }
+
+        .field-error {
+            border-color: #c62828 !important;
+            background: #fff5f5 !important;
+        }
+        .error-text {
+            color: #c62828;
+            font-size: 13px;
+            font-weight: 500;
+            margin-top: 4px;
+            display: none;
+        }
+        .error-text.show {
+            display: block;
+        }
     </style>
 </head>
 <body>
@@ -700,8 +738,9 @@
 
         <div class="input-group">
             <span class="input-icon">📍</span>
-            <label>Район или локация <span class="optional">(необязательно)</span></label>
+            <label>Район или локация <span style="color: #c62828;">*</span></label>
             <input type="text" id="locationInput" placeholder="Например: Центр, Приморский р-н, или конкретный ЖК">
+            <div class="error-text" id="locationError">Пожалуйста, укажите район или локацию</div>
         </div>
 
         <div class="nav-buttons">
@@ -762,9 +801,8 @@
         <div class="step-title">Почти готово! 📱</div>
         <div class="step-sub">Оставьте номер, и наш эксперт свяжется с вами в течение <strong>15 минут</strong></div>
         
-        <div class="input-group phone-input-wrapper">
-            <span class="input-icon">📞</span>
-            <label>Ваш номер телефона</label>
+        <div class="phone-input-wrapper">
+            <span class="phone-icon">📞</span>
             <span class="prefix">+7</span>
             <input type="tel" id="phoneInput" placeholder="(999) 123-45-67" maxlength="15">
         </div>
@@ -815,6 +853,7 @@
         const toStep2Btn = document.getElementById('toStep2');
         const directionSelect = document.getElementById('directionSelect');
         const locationInput = document.getElementById('locationInput');
+        const locationError = document.getElementById('locationError');
         const backToStep1 = document.getElementById('backToStep1');
         const toStep3Btn = document.getElementById('toStep3');
         const budgetInput = document.getElementById('budgetInput');
@@ -846,7 +885,7 @@
             stepCounter.textContent = stepNum + '/' + total;
         }
 
-        function showToast(text, isError = false) {
+        function showToast(text, isError) {
             toast.textContent = text;
             toast.className = 'toast show' + (isError ? ' error' : '');
             setTimeout(() => { toast.className = 'toast'; }, 5000);
@@ -894,12 +933,27 @@
         });
         locationInput.addEventListener('input', function() {
             answers.location = this.value.trim();
+            if (this.value.trim()) {
+                this.classList.remove('field-error');
+                locationError.classList.remove('show');
+            }
         });
 
         backToStep1.addEventListener('click', function() { showStep(1); });
         toStep3Btn.addEventListener('click', function() {
             answers.direction = directionSelect.value;
             answers.location = locationInput.value.trim();
+            
+            if (!answers.location) {
+                locationInput.classList.add('field-error');
+                locationError.classList.add('show');
+                locationInput.focus();
+                return;
+            }
+            
+            locationInput.classList.remove('field-error');
+            locationError.classList.remove('show');
+            
             answers.mortgage = mortgageInput.checked;
             if (mortgageInput.checked) {
                 mortgageCheckbox.classList.add('active');
