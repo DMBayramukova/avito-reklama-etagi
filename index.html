@@ -326,6 +326,9 @@
             color: #999;
             font-size: 12px;
         }
+        .input-group label .required {
+            color: #c62828;
+        }
         .input-group .input-icon {
             position: absolute;
             left: 18px;
@@ -368,6 +371,29 @@
         .input-group textarea ~ .input-icon {
             top: 22px;
             transform: none;
+        }
+
+        .budget-input-wrapper {
+            position: relative;
+        }
+        .budget-input-wrapper .currency-suffix {
+            position: absolute;
+            right: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 16px;
+            font-weight: 600;
+            color: #1a1a1a;
+            pointer-events: none;
+            z-index: 2;
+            background: #fafafa;
+            padding-left: 8px;
+        }
+        .budget-input-wrapper input:focus ~ .currency-suffix {
+            background: #ffffff;
+        }
+        .budget-input-wrapper input {
+            padding-right: 40px;
         }
 
         .checkbox-group {
@@ -658,6 +684,13 @@
             .phone-input-wrapper .phone-icon {
                 font-size: 17px;
             }
+            .budget-input-wrapper input {
+                padding-right: 36px;
+            }
+            .budget-input-wrapper .currency-suffix {
+                font-size: 14px;
+                right: 14px;
+            }
         }
 
         input::-webkit-outer-spin-button,
@@ -738,7 +771,7 @@
 
         <div class="input-group">
             <span class="input-icon">📍</span>
-            <label>Район или локация <span style="color: #c62828;">*</span></label>
+            <label>Район или локация <span class="required">*</span></label>
             <input type="text" id="locationInput" placeholder="Например: Центр, Приморский р-н, или конкретный ЖК">
             <div class="error-text" id="locationError">Пожалуйста, укажите район или локацию</div>
         </div>
@@ -754,10 +787,11 @@
         <div class="step-title">Бюджет и условия</div>
         <div class="step-sub">Укажите примерный бюджет и дополнительные опции</div>
         
-        <div class="input-group">
+        <div class="input-group budget-input-wrapper">
             <span class="input-icon">💰</span>
             <label>Примерный бюджет <span class="optional">(необязательно)</span></label>
-            <input type="text" id="budgetInput" placeholder="Например: до 15 млн ₽ или 100 000 ₽/м²">
+            <input type="text" id="budgetInput" placeholder="Например: 15 000 000" inputmode="numeric">
+            <span class="currency-suffix">₽</span>
         </div>
 
         <div class="checkbox-group" id="mortgageCheckbox">
@@ -799,8 +833,15 @@
     <div class="step" data-step="5">
         <div class="step-counter-text">Вопрос 5 из 6</div>
         <div class="step-title">Почти готово! 📱</div>
-        <div class="step-sub">Оставьте номер, и наш эксперт свяжется с вами в течение <strong>15 минут</strong></div>
+        <div class="step-sub">Оставьте ваши контактные данные, и наш эксперт свяжется с вами в течение <strong>15 минут</strong></div>
         
+        <div class="input-group">
+            <span class="input-icon">👤</span>
+            <label>Ваше имя <span class="required">*</span></label>
+            <input type="text" id="nameInput" placeholder="Например: Иван Петров">
+            <div class="error-text" id="nameError">Пожалуйста, укажите ваше имя</div>
+        </div>
+
         <div class="phone-input-wrapper">
             <span class="phone-icon">📞</span>
             <span class="prefix">+7</span>
@@ -814,15 +855,16 @@
         <div class="toast" id="toastMessage"></div>
     </div>
 
-   <div class="step" data-step="6">
-    <div class="final-icon">🎉</div>
-    <div class="final-title">Спасибо за обращение!</div>
-    <div class="final-sub">
-        Наш специалист свяжется с вами в течение <strong>15 минут</strong>.<br>
-        Мы уже готовим для вас персональную подборку!
-    </div>
-    <div style="text-align: center; margin-top: 20px;">
-        <button class="btn-primary" onclick="location.reload()" style="display: inline-block; width: auto; padding: 18px 40px;">Пройти заново</button>
+    <div class="step" data-step="6">
+        <div class="final-icon">🎉</div>
+        <div class="final-title">Спасибо за обращение!</div>
+        <div class="final-sub">
+            Наш специалист свяжется с вами в течение <strong>15 минут</strong>.<br>
+            Мы уже готовим для вас персональную подборку!
+        </div>
+        <div style="text-align: center; margin-top: 20px;">
+            <button class="btn-primary" onclick="location.reload()" style="display: inline-block; width: auto; padding: 18px 40px;">Пройти заново</button>
+        </div>
     </div>
 </div>
 
@@ -842,6 +884,7 @@
             mortgage: false,
             hasQuestions: null,
             comment: '',
+            name: '',
             phone: ''
         };
 
@@ -867,6 +910,8 @@
         const commentInput = document.getElementById('commentInput');
         const backToStep3 = document.getElementById('backToStep3');
         const toStep5Btn = document.getElementById('toStep5');
+        const nameInput = document.getElementById('nameInput');
+        const nameError = document.getElementById('nameError');
         const phoneInput = document.getElementById('phoneInput');
         const backToStep4 = document.getElementById('backToStep4');
         const sendFinalBtn = document.getElementById('sendFinal');
@@ -964,6 +1009,44 @@
             showStep(3);
         });
 
+        function formatBudget(value) {
+            let cleaned = value.replace(/\s/g, '').replace(/[^0-9]/g, '');
+            if (cleaned === '') return '';
+            let number = parseInt(cleaned, 10);
+            if (isNaN(number)) return '';
+            let formatted = number.toLocaleString('ru-RU');
+            return formatted;
+        }
+
+        budgetInput.addEventListener('input', function() {
+            let cursorPos = this.selectionStart;
+            let rawValue = this.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
+            
+            if (rawValue === '') {
+                this.value = '';
+                answers.budget = '';
+                return;
+            }
+            
+            let number = parseInt(rawValue, 10);
+            if (isNaN(number)) {
+                this.value = '';
+                answers.budget = '';
+                return;
+            }
+            
+            let formatted = number.toLocaleString('ru-RU');
+            this.value = formatted;
+            answers.budget = formatted;
+            
+            let newCursorPos = cursorPos;
+            let diff = this.value.length - rawValue.length;
+            if (diff > 0) {
+                newCursorPos = cursorPos + diff;
+            }
+            this.setSelectionRange(newCursorPos, newCursorPos);
+        });
+
         mortgageCheckbox.addEventListener('click', function(e) {
             mortgageInput.checked = !mortgageInput.checked;
             this.classList.toggle('active', mortgageInput.checked);
@@ -976,18 +1059,14 @@
             answers.mortgage = this.checked;
         });
 
-        budgetInput.addEventListener('input', function() {
-            answers.budget = this.value.trim();
-        });
-
         backToStep2.addEventListener('click', function() {
-            answers.budget = budgetInput.value.trim();
+            answers.budget = budgetInput.value;
             answers.mortgage = mortgageInput.checked;
             showStep(2);
         });
         
         toStep4Btn.addEventListener('click', function() {
-            answers.budget = budgetInput.value.trim();
+            answers.budget = budgetInput.value;
             answers.mortgage = mortgageInput.checked;
             showStep(4);
         });
@@ -1030,6 +1109,14 @@
             showStep(5);
         });
 
+        nameInput.addEventListener('input', function() {
+            answers.name = this.value.trim();
+            if (this.value.trim()) {
+                this.classList.remove('field-error');
+                nameError.classList.remove('show');
+            }
+        });
+
         phoneInput.addEventListener('input', function(e) {
             let value = this.value.replace(/\D/g, '');
             if (value.length > 10) value = value.slice(0, 10);
@@ -1058,11 +1145,22 @@
         });
 
         backToStep4.addEventListener('click', function() {
+            answers.name = nameInput.value.trim();
             answers.phone = phoneInput.value.replace(/\D/g, '');
             showStep(4);
         });
 
         sendFinalBtn.addEventListener('click', function() {
+            answers.name = nameInput.value.trim();
+            if (!answers.name) {
+                nameInput.classList.add('field-error');
+                nameError.classList.add('show');
+                nameInput.focus();
+                return;
+            }
+            nameInput.classList.remove('field-error');
+            nameError.classList.remove('show');
+
             const rawPhone = phoneInput.value.replace(/\D/g, '');
             if (rawPhone.length !== 10) {
                 showToast('Введите корректный номер телефона (10 цифр)', true);
@@ -1085,6 +1183,7 @@
             };
 
             let msg = '🔹 *Новая заявка с сайта* 🔹\n\n';
+            msg += '👤 *Имя:* ' + answers.name + '\n';
             msg += '📌 *Цель:* ' + (typeMap[answers.q1] || answers.q1) + '\n';
             if (answers.direction) {
                 msg += '🧭 *Направление:* ' + (directionMap[answers.direction] || answers.direction) + '\n';
@@ -1093,7 +1192,7 @@
                 msg += '📍 *Локация:* ' + answers.location + '\n';
             }
             if (answers.budget) {
-                msg += '💰 *Бюджет:* ' + answers.budget + '\n';
+                msg += '💰 *Бюджет:* ' + answers.budget + ' ₽\n';
             }
             msg += '🏦 *Ипотека:* ' + (answers.mortgage ? '✅ Нужна' : '❌ Не нужна') + '\n';
             if (answers.hasQuestions === 'yes') {
