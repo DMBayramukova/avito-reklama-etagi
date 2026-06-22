@@ -1152,12 +1152,13 @@
 
         sendFinalBtn.addEventListener('click', function() {
             answers.name = nameInput.value.trim();
-            if (!answers.name) {
-                nameInput.classList.add('field-error');
-                nameError.classList.add('show');
-                nameInput.focus();
-                return;
-            }
+           if (!answers.name || answers.name.length < 2) {
+    nameInput.classList.add('field-error');
+    nameError.textContent = 'Пожалуйста, укажите ваше имя (минимум 2 символа)';
+    nameError.classList.add('show');
+    nameInput.focus();
+    return;
+}
             nameInput.classList.remove('field-error');
             nameError.classList.remove('show');
 
