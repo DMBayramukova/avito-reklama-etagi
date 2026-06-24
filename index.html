@@ -693,8 +693,8 @@
                 <hr class="divider-line">
             </div>
 
-            <!-- Блок для всех целей (комнатность + бюджет) -->
-            <div id="commonFields">
+            <!-- Блок для Купить и Новостройка -->
+            <div id="buyNewFields">
                 <div class="two-columns">
                     <div class="field-wrapper">
                         <label>Комнатность</label>
@@ -717,7 +717,7 @@
                 </div>
             </div>
 
-            <!-- Локация (для buy и sell) -->
+            <!-- Локация (только для Купить) -->
             <div id="locationField" style="display: none;">
                 <div class="field-wrapper">
                     <label>Локация</label>
@@ -826,6 +826,7 @@
         const budgetInput = document.getElementById('budgetInput');
         const locationInput = document.getElementById('locationInput');
         const locationField = document.getElementById('locationField');
+        const buyNewFields = document.getElementById('buyNewFields');
         const sellFields = document.getElementById('sellFields');
         const mtgFields = document.getElementById('mtgFields');
         const sellTimingInput = document.getElementById('sellTimingInput');
@@ -931,24 +932,24 @@
         }
 
         function updateExtraFields() {
-            // Скрываем все специфичные блоки
+            // Скрываем все блоки
+            buyNewFields.style.display = 'none';
             locationField.style.display = 'none';
             sellFields.style.display = 'none';
             mtgFields.style.display = 'none';
 
-            // Показываем нужные
-            if (selectedType === 'buy' || selectedType === 'sell') {
+            if (selectedType === 'buy') {
+                buyNewFields.style.display = 'block';
                 locationField.style.display = 'block';
-            }
-            if (selectedType === 'sell') {
+            } else if (selectedType === 'new') {
+                buyNewFields.style.display = 'block';
+            } else if (selectedType === 'sell') {
                 sellFields.style.display = 'block';
-            }
-            if (selectedType === 'mtg') {
+            } else if (selectedType === 'mtg') {
                 mtgFields.style.display = 'block';
             }
         }
 
-        // Маска для суммы
         function formatCurrency(input) {
             let cursorPos = input.selectionStart;
             let rawValue = input.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
@@ -974,7 +975,6 @@
             return formatted;
         }
 
-        // Выбор цели
         q1Options.addEventListener('click', function(e) {
             const btn = e.target.closest('.option-btn');
             if (!btn) return;
@@ -988,7 +988,6 @@
             showStep(2);
         });
 
-        // Имя
         nameInput.addEventListener('input', function() {
             if (this.value.trim()) {
                 this.classList.remove('field-error');
@@ -997,7 +996,6 @@
             toggleExtraFields();
         });
 
-        // Телефон
         phoneInput.addEventListener('input', function(e) {
             let value = this.value.replace(/\D/g, '');
             if (value.length > 10) value = value.slice(0, 10);
@@ -1025,7 +1023,6 @@
             }
         });
 
-        // Маски для сумм
         budgetInput.addEventListener('input', function() {
             answers.budget = formatCurrency(this);
         });
@@ -1046,7 +1043,6 @@
             answers.propertyCost = formatCurrency(this);
         });
 
-        // Сохранение данных
         roomsSelect.addEventListener('change', function() {
             answers.rooms = this.value;
         });
@@ -1067,7 +1063,6 @@
             answers.meetingDeal = btn.dataset.value;
         });
 
-        // Отправка
         sendFinalBtn.addEventListener('click', function() {
             const name = nameInput.value.trim();
             if (!name || name.length < 2) {
@@ -1111,7 +1106,6 @@
                 msg += '📍 *Локация:* ' + answers.location + '\n';
             }
             
-            // Продажа
             if (answers.sellTiming) {
                 msg += '📅 *Сроки продажи:* ' + answers.sellTiming + '\n';
             }
@@ -1119,7 +1113,6 @@
                 msg += '🤝 *Встречная сделка:* ' + (answers.meetingDeal === 'yes' ? '✅ Да' : '❌ Нет') + '\n';
             }
             
-            // Ипотека
             if (answers.initialPayment) {
                 msg += '💵 *Первоначальный взнос:* ' + answers.initialPayment + ' ₽\n';
             }
