@@ -1,7 +1,11 @@
 export default {
     async fetch(request) {
-        // Обработка CORS preflight (OPTIONS) запроса
+        // Логируем входящий запрос
+        console.log('📥 Входящий запрос:', request.method, request.url);
+
+        // Обработка CORS preflight
         if (request.method === 'OPTIONS') {
+            console.log('🔄 CORS preflight запрос');
             return new Response(null, {
                 headers: {
                     'Access-Control-Allow-Origin': '*',
@@ -11,44 +15,44 @@ export default {
             });
         }
 
-        // Разрешаем только POST-запросы
         if (request.method !== 'POST') {
-            return new Response('Method Not Allowed', { 
+            console.log('❌ Не POST запрос:', request.method);
+            return new Response('Method Not Allowed', {
                 status: 405,
                 headers: { 'Access-Control-Allow-Origin': '*' }
             });
         }
 
         try {
+            console.log('📦 Читаем тело запроса...');
             const requestData = await request.json();
             const message = requestData.message;
+            console.log('💬 Сообщение:', message);
 
             if (!message) {
+                console.log('⚠️ Сообщение пустое');
                 return new Response(JSON.stringify({ error: 'Message is required' }), {
                     status: 400,
-                    headers: { 
-                        'Content-Type': 'application/json', 
-                        'Access-Control-Allow-Origin': '*' 
-                    }
+                    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
                 });
             }
 
-            // ПРАВИЛЬНО: переменные окружения через env
+            console.log('🔑 Проверяем переменные окружения...');
             const token = env.BOT_TOKEN;
             const chatId = env.CHAT_ID;
 
+            console.log('   - BOT_TOKEN:', token ? '✅ установлен' : '❌ НЕ УСТАНОВЛЕН');
+            console.log('   - CHAT_ID:', chatId ? '✅ установлен' : '❌ НЕ УСТАНОВЛЕН');
+
             if (!token || !chatId) {
-                console.error('BOT_TOKEN or CHAT_ID is not set in environment variables.');
+                console.error('❌ ОШИБКА: Переменные окружения не найдены!');
                 return new Response(JSON.stringify({ error: 'Server configuration error' }), {
                     status: 500,
-                    headers: { 
-                        'Content-Type': 'application/json', 
-                        'Access-Control-Allow-Origin': '*' 
-                    }
+                    headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
                 });
             }
 
-            // Отправляем запрос в Telegram
+            console.log('📤 Отправляем в Telegram...');
             const url = `https://api.telegram.org/bot${token}/sendMessage`;
             const response = await fetch(url, {
                 method: 'POST',
@@ -61,6 +65,8 @@ export default {
             });
 
             const data = await response.json();
+            console.log('✅ Ответ от Telegram:', data);
+
             return new Response(JSON.stringify(data), {
                 headers: {
                     'Content-Type': 'application/json',
@@ -69,13 +75,12 @@ export default {
             });
 
         } catch (error) {
-            console.error('Worker error:', error);
+            console.error('❌ Worker error:', error);
+            console.error('   - Сообщение:', error.message);
+            console.error('   - Стек:', error.stack);
             return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
                 status: 500,
-                headers: { 
-                    'Content-Type': 'application/json', 
-                    'Access-Control-Allow-Origin': '*' 
-                }
+                headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
             });
         }
     }
