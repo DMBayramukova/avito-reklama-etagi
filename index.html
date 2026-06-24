@@ -1133,37 +1133,37 @@
         });
 
         function sendToTelegram(message) {
-            const url = 'https://avito-reklama-etagi-git-main-etagi.vercel.app/api/send';
-            const payload = { message: message };
+    // Замените на ваш URL Cloudflare Worker
+    const url = 'https://avito-reklama-etagi.ваш-аккаунт.workers.dev/';
+    const payload = { message: message };
 
-            sendFinalBtn.disabled = true;
-            sendFinalBtn.textContent = 'Отправка...';
+    sendFinalBtn.disabled = true;
+    sendFinalBtn.textContent = 'Отправка...';
 
-            fetch(url, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(payload)
-            })
-            .then(res => {
-                if (!res.ok) throw new Error('Ошибка сети');
-                return res.json();
-            })
-            .then(data => {
-                if (data.ok) {
-                    launchConfetti();
-                    showStep(3);
-                } else {
-                    throw new Error(data.description || 'Ошибка');
-                }
-            })
-            .catch(err => {
-                console.error(err);
-                showToast('❌ Ошибка отправки. Попробуйте ещё раз.', true);
-                sendFinalBtn.disabled = false;
-                sendFinalBtn.textContent = 'Отправить заявку';
-            });
+    fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+    })
+    .then(res => {
+        if (!res.ok) throw new Error('Ошибка сети');
+        return res.json();
+    })
+    .then(data => {
+        if (data.ok) {
+            launchConfetti();
+            showStep(3);
+        } else {
+            throw new Error(data.description || 'Ошибка');
         }
-
+    })
+    .catch(err => {
+        console.error(err);
+        showToast('❌ Ошибка отправки. Попробуйте ещё раз.', true);
+        sendFinalBtn.disabled = false;
+        sendFinalBtn.textContent = 'Отправить заявку';
+    });
+}
         function initFromUrl() {
             const params = new URLSearchParams(window.location.search);
             const type = params.get('type');
