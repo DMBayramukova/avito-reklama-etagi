@@ -1,5 +1,5 @@
 export default {
-    async fetch(request) {
+    async fetch(request, env, ctx) {
         // Логируем входящий запрос
         console.log('📥 Входящий запрос:', request.method, request.url);
 
@@ -31,14 +31,15 @@ export default {
             console.log('💬 Сообщение:', message);
 
             if (!message) {
-                console.log('⚠️ Ошибка пустого');
+                console.log('⚠️ Сообщение пустое');
                 return new Response(JSON.stringify({ error: 'Message is required' }), {
                     status: 400,
                     headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' }
                 });
             }
 
-            // ======== ВАЖНО! Переменные окружения ========
+            // ======== ИСПРАВЛЕННЫЙ КОД ========
+            // Переменные окружения теперь доступны через env (передаётся в fetch)
             console.log('🔑 Проверяем переменные...');
             const token = env.BOT_TOKEN;
             const chatId = env.CHAT_ID;
