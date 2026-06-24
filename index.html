@@ -105,21 +105,16 @@
             padding-bottom: 18px;
             border-bottom: 2px solid rgba(227, 30, 36, 0.15);
         }
-        .logo {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-            color: #1a1a1a;
-        }
-        .logo span {
-            color: #e31e24;
-        }
-        .logo small {
-            font-size: 12px;
-            font-weight: 400;
-            color: #777;
+        .logo svg {
             display: block;
-            letter-spacing: 0.3px;
+            height: 20px;
+            width: auto;
+            max-width: 132px;
+        }
+        @media (max-width: 440px) {
+            .logo svg {
+                height: 16px;
+            }
         }
 
         .btn-back {
@@ -240,7 +235,6 @@
             100% { transform: scale(1.1); opacity: 0; }
         }
 
-        /* ===== НОВАЯ СТРУКТУРА ПОЛЕЙ С ИКОНКАМИ ===== */
         .field-wrapper {
             position: relative;
             margin-bottom: 16px;
@@ -252,12 +246,6 @@
             font-weight: 600;
             color: #555;
             margin-bottom: 4px;
-        }
-
-        .field-wrapper label .optional {
-            font-weight: 400;
-            color: #999;
-            font-size: 12px;
         }
 
         .field-wrapper label .required {
@@ -304,32 +292,6 @@
             color: #e31e24;
         }
 
-        .field-wrapper textarea {
-            width: 100%;
-            padding: 16px 18px 16px 50px;
-            font-size: 16px;
-            border: 2px solid #e8e8e8;
-            border-radius: 14px;
-            background: #fafafa;
-            transition: all 0.2s;
-            font-family: inherit;
-            outline: none;
-            color: #1a1a1a;
-            resize: vertical;
-            min-height: 70px;
-            padding-top: 16px;
-        }
-
-        .field-wrapper textarea:focus {
-            border-color: #e31e24;
-            background: #ffffff;
-            box-shadow: 0 0 0 4px rgba(227, 30, 36, 0.06);
-        }
-
-        .field-wrapper textarea:focus ~ .field-icon {
-            color: #e31e24;
-        }
-
         .field-wrapper .error-text {
             color: #c62828;
             font-size: 13px;
@@ -342,7 +304,6 @@
             display: block;
         }
 
-        /* Бюджет с суффиксом */
         .budget-wrapper .currency-suffix {
             position: absolute;
             right: 18px;
@@ -366,7 +327,6 @@
             padding-right: 40px;
         }
 
-        /* Телефон */
         .phone-wrapper {
             display: flex;
             align-items: center;
@@ -423,11 +383,45 @@
             font-weight: 400;
         }
 
-        /* Две колонки */
         .two-columns {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
+        }
+
+        .yesno-group {
+            display: flex;
+            gap: 12px;
+            margin: 4px 0 8px 0;
+        }
+        .yesno-btn {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e8e8e8;
+            border-radius: 14px;
+            background: #f8f8f8;
+            font-size: 15px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.25s ease;
+            text-align: center;
+            color: #555;
+            font-family: 'Inter', sans-serif;
+        }
+        .yesno-btn:active { transform: scale(0.96); }
+        .yesno-btn.selected-yes {
+            border-color: #2e7d32;
+            background: #e8f5e9;
+            color: #2e7d32;
+            transform: scale(1.03);
+            box-shadow: 0 0 0 4px rgba(46, 125, 50, 0.1);
+        }
+        .yesno-btn.selected-no {
+            border-color: #c62828;
+            background: #ffebee;
+            color: #c62828;
+            transform: scale(1.03);
+            box-shadow: 0 0 0 4px rgba(198, 40, 40, 0.1);
         }
 
         .btn-primary {
@@ -590,15 +584,17 @@
             background: #fff5f5 !important;
         }
 
+        .mt-8 {
+            margin-top: 8px;
+        }
+
         @media (max-width: 440px) {
             .container { padding: 24px 18px 28px; }
             .step-title { font-size: 21px; }
             .option-btn { padding: 14px 16px; font-size: 15px; }
             .btn-primary { font-size: 16px; padding: 16px; }
-            .logo { font-size: 18px; }
             .field-wrapper input,
-            .field-wrapper select,
-            .field-wrapper textarea {
+            .field-wrapper select {
                 font-size: 15px;
                 padding: 14px 16px 14px 44px;
             }
@@ -635,20 +631,6 @@
             margin: 0;
         }
         input[type=number] { -moz-appearance: textfield; }
-
-        .logo svg {
-    display: block;
-    height: 20px;
-    width: auto;
-    max-width: 132px;
-}
-
-@media (max-width: 440px) {
-    .logo svg {
-        height: 16px;
-    }
-}
-        
     </style>
 </head>
 <body>
@@ -662,14 +644,14 @@
 
 <div class="container" id="app">
     <div class="header">
-    <div class="logo">
-        <svg width="132" height="20" viewBox="0 0 132 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M77.1625 11.3853C74.2233 11.3853 73.384 12.2466 73.384 13.6819C73.384 14.7266 74.0125 15.3645 75.4831 15.3677C76.8478 15.3677 78.1423 14.9371 79.4011 14.0758V11.3853H77.1625ZM69.569 1.66472C71.0396 1.05074 72.8342 0.5 76.0535 0.5C81.6519 0.5 84.3354 3.59768 84.3701 8.5146V19.0646H79.8563V17.3102C78.4214 18.6021 76.6024 19.5 74.0837 19.5C70.2687 19.5 68.3797 17.2384 68.3797 14.0089C68.3797 10.1972 70.8635 8.12386 75.7622 8.12386H79.4714C79.3318 6.18608 78.3165 4.89429 75.2377 4.89429C72.9625 4.89429 71.2147 5.40468 69.9896 6.0426C69.8931 5.15361 69.8172 4.31879 69.7461 3.52626V3.52431C69.6871 2.87861 69.6318 2.26091 69.569 1.66472ZM107.611 1.03905L103.351 8.16773H101.919V1.03905H97.0309V8.16773H95.6324L91.3379 1.03905H86.2752L92.001 9.92409L86.4485 19.0957H91.9308L95.772 12.0737H97.0309V19.0957H101.919V12.0737H103.176L107.018 19.0957H112.501L106.984 9.92409L112.676 1.03905H107.611ZM51.0968 5.33827V1.03905H66.8146V5.33827H61.4007V19.0958H56.5107V5.33827H51.0968ZM119.889 12.217L127.064 1.03905H132V19.0958H127.064V8.09612L119.925 19.0958H114.988V1.03905H119.889V12.217ZM40.3579 0.567428C37.4669 0.567428 35.3412 0.961049 33.8431 1.683C33.8943 2.21129 33.9456 2.77362 33.9968 3.33604L33.9969 3.33659C34.0847 4.30108 34.1726 5.26547 34.2605 6.05762C35.3767 5.44883 37.0434 4.91015 39.1737 4.91015C42.0663 4.91015 43.8117 6.09426 44.4301 8.09742H37.3973V12.0051H44.4703C43.8766 13.978 42.3446 15.1255 39.7658 15.1255C37.4669 15.1255 35.7941 14.2999 34.6099 13.2242C34.3234 13.7832 34.0366 14.3152 33.747 14.8525C33.3677 15.556 32.9837 16.2684 32.5893 17.0618C34.0874 18.3526 36.3522 19.5 40.2188 19.5C46.2483 19.5 49.8041 16.0578 49.8041 10.0337C49.7654 4.37629 46.2807 0.567428 40.3579 0.567428Z" fill="#FC403A"/>
-            <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3972 15.5258L13.428 17.5993L23.0757 18.4814L22.9549 17.1838L13.3972 15.5258ZM22.6824 14.4629L13.3073 11.2661L13.3368 13.3477L22.8033 15.7898L22.6824 14.4629ZM22.4101 11.6882L13.216 7.01432L13.271 9.09455L22.5308 13.0461L22.4101 11.6882ZM22.1376 8.82382L13.1556 2.76128L13.1865 4.84291L22.2584 10.2406L22.1376 8.82382ZM0.907152 6.92314L13.0992 0.5L23.3776 8.22069L24.4673 19.5H0L0.907152 6.92314Z" fill="#FC403A"/>
-        </svg>
+        <div class="logo">
+            <svg width="132" height="20" viewBox="0 0 132 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M77.1625 11.3853C74.2233 11.3853 73.384 12.2466 73.384 13.6819C73.384 14.7266 74.0125 15.3645 75.4831 15.3677C76.8478 15.3677 78.1423 14.9371 79.4011 14.0758V11.3853H77.1625ZM69.569 1.66472C71.0396 1.05074 72.8342 0.5 76.0535 0.5C81.6519 0.5 84.3354 3.59768 84.3701 8.5146V19.0646H79.8563V17.3102C78.4214 18.6021 76.6024 19.5 74.0837 19.5C70.2687 19.5 68.3797 17.2384 68.3797 14.0089C68.3797 10.1972 70.8635 8.12386 75.7622 8.12386H79.4714C79.3318 6.18608 78.3165 4.89429 75.2377 4.89429C72.9625 4.89429 71.2147 5.40468 69.9896 6.0426C69.8931 5.15361 69.8172 4.31879 69.7461 3.52626V3.52431C69.6871 2.87861 69.6318 2.26091 69.569 1.66472ZM107.611 1.03905L103.351 8.16773H101.919V1.03905H97.0309V8.16773H95.6324L91.3379 1.03905H86.2752L92.001 9.92409L86.4485 19.0957H91.9308L95.772 12.0737H97.0309V19.0957H101.919V12.0737H103.176L107.018 19.0957H112.501L106.984 9.92409L112.676 1.03905H107.611ZM51.0968 5.33827V1.03905H66.8146V5.33827H61.4007V19.0958H56.5107V5.33827H51.0968ZM119.889 12.217L127.064 1.03905H132V19.0958H127.064V8.09612L119.925 19.0958H114.988V1.03905H119.889V12.217ZM40.3579 0.567428C37.4669 0.567428 35.3412 0.961049 33.8431 1.683C33.8943 2.21129 33.9456 2.77362 33.9968 3.33604L33.9969 3.33659C34.0847 4.30108 34.1726 5.26547 34.2605 6.05762C35.3767 5.44883 37.0434 4.91015 39.1737 4.91015C42.0663 4.91015 43.8117 6.09426 44.4301 8.09742H37.3973V12.0051H44.4703C43.8766 13.978 42.3446 15.1255 39.7658 15.1255C37.4669 15.1255 35.7941 14.2999 34.6099 13.2242C34.3234 13.7832 34.0366 14.3152 33.747 14.8525C33.3677 15.556 32.9837 16.2684 32.5893 17.0618C34.0874 18.3526 36.3522 19.5 40.2188 19.5C46.2483 19.5 49.8041 16.0578 49.8041 10.0337C49.7654 4.37629 46.2807 0.567428 40.3579 0.567428Z" fill="#FC403A"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.3972 15.5258L13.428 17.5993L23.0757 18.4814L22.9549 17.1838L13.3972 15.5258ZM22.6824 14.4629L13.3073 11.2661L13.3368 13.3477L22.8033 15.7898L22.6824 14.4629ZM22.4101 11.6882L13.216 7.01432L13.271 9.09455L22.5308 13.0461L22.4101 11.6882ZM22.1376 8.82382L13.1556 2.76128L13.1865 4.84291L22.2584 10.2406L22.1376 8.82382ZM0.907152 6.92314L13.0992 0.5L23.3776 8.22069L24.4673 19.5H0L0.907152 6.92314Z" fill="#FC403A"/>
+            </svg>
+        </div>
+        <button class="btn-back" id="backToChoice">← Назад к выбору</button>
     </div>
-    <button class="btn-back" id="backToChoice">← Назад к выбору</button>
-</div>
 
     <!-- Шаг 1: Выбор цели -->
     <div class="step active" data-step="1">
@@ -711,35 +693,84 @@
                 <hr class="divider-line">
             </div>
 
-            <div class="two-columns">
-                <!-- Комнатность -->
-                <div class="field-wrapper">
-                    <label>Комнатность <span class="optional">(необязательно)</span></label>
-                    <select id="roomsSelect">
-                        <option value="">Не выбрано</option>
-                        <option value="1">1</option>
-                        <option value="2">2</option>
-                        <option value="3">3</option>
-                        <option value="4+">4 и более</option>
-                    </select>
-                    <span class="field-icon">🏠</span>
-                </div>
+            <!-- Блок для всех целей (комнатность + бюджет) -->
+            <div id="commonFields">
+                <div class="two-columns">
+                    <div class="field-wrapper">
+                        <label>Комнатность</label>
+                        <select id="roomsSelect">
+                            <option value="">Не выбрано</option>
+                            <option value="1">1</option>
+                            <option value="2">2</option>
+                            <option value="3">3</option>
+                            <option value="4+">4 и более</option>
+                        </select>
+                        <span class="field-icon">🏠</span>
+                    </div>
 
-                <!-- Бюджет -->
-                <div class="field-wrapper budget-wrapper">
-                    <label>Бюджет <span class="optional">(необязательно)</span></label>
-                    <input type="text" id="budgetInput" placeholder="10 000 000" inputmode="numeric">
-                    <span class="field-icon">💰</span>
-                    <span class="currency-suffix">₽</span>
+                    <div class="field-wrapper budget-wrapper">
+                        <label>Бюджет</label>
+                        <input type="text" id="budgetInput" placeholder="10 000 000" inputmode="numeric">
+                        <span class="field-icon">💰</span>
+                        <span class="currency-suffix">₽</span>
+                    </div>
                 </div>
             </div>
 
-            <!-- Локация -->
+            <!-- Локация (для buy и sell) -->
             <div id="locationField" style="display: none;">
                 <div class="field-wrapper">
-                    <label>Локация <span class="optional">(необязательно)</span></label>
+                    <label>Локация</label>
                     <input type="text" id="locationInput" placeholder="Например: Центр, Приморский р-н">
                     <span class="field-icon">📍</span>
+                </div>
+            </div>
+
+            <!-- Специфичные поля для Продажи -->
+            <div id="sellFields" style="display: none;">
+                <div class="field-wrapper">
+                    <label>Сроки продажи</label>
+                    <input type="text" id="sellTimingInput" placeholder="Например: до конца месяца">
+                    <span class="field-icon">📅</span>
+                </div>
+                <div class="field-wrapper">
+                    <label>Планируется встречная сделка?</label>
+                    <div class="yesno-group" id="meetingDealGroup">
+                        <button class="yesno-btn" data-value="yes">✅ Да</button>
+                        <button class="yesno-btn" data-value="no">❌ Нет</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Специфичные поля для Ипотеки -->
+            <div id="mtgFields" style="display: none;">
+                <div class="field-wrapper budget-wrapper">
+                    <label>Размер первоначального взноса</label>
+                    <input type="text" id="initialPaymentInput" placeholder="1 000 000" inputmode="numeric">
+                    <span class="field-icon">💵</span>
+                    <span class="currency-suffix">₽</span>
+                </div>
+                <div class="field-wrapper">
+                    <label>Комфортный платеж в месяц</label>
+                    <div class="two-columns">
+                        <div class="field-wrapper budget-wrapper" style="margin-bottom: 0;">
+                            <label style="font-size: 12px; font-weight: 400; color: #999;">от</label>
+                            <input type="text" id="paymentFromInput" placeholder="30 000" inputmode="numeric">
+                            <span class="field-icon" style="font-size: 16px;">📊</span>
+                            <span class="currency-suffix">₽</span>
+                        </div>
+                        <div class="field-wrapper budget-wrapper" style="margin-bottom: 0;">
+                            <label style="font-size: 12px; font-weight: 400; color: #999;">до</label>
+                            <input type="text" id="paymentToInput" placeholder="50 000" inputmode="numeric">
+                            <span class="currency-suffix">₽</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="field-wrapper budget-wrapper mt-8">
+                    <label>Примерная стоимость недвижимости</label>
+                    <input type="text" id="propertyCostInput" placeholder="5 000 000" inputmode="numeric">
+                    <span class="field-icon">🏠</span>
+                    <span class="currency-suffix">₽</span>
                 </div>
             </div>
         </div>
@@ -774,7 +805,13 @@
             phone: '',
             rooms: '',
             budget: '',
-            location: ''
+            location: '',
+            sellTiming: '',
+            meetingDeal: '',
+            initialPayment: '',
+            paymentFrom: '',
+            paymentTo: '',
+            propertyCost: ''
         };
 
         const steps = document.querySelectorAll('.step');
@@ -789,6 +826,14 @@
         const budgetInput = document.getElementById('budgetInput');
         const locationInput = document.getElementById('locationInput');
         const locationField = document.getElementById('locationField');
+        const sellFields = document.getElementById('sellFields');
+        const mtgFields = document.getElementById('mtgFields');
+        const sellTimingInput = document.getElementById('sellTimingInput');
+        const meetingDealGroup = document.getElementById('meetingDealGroup');
+        const initialPaymentInput = document.getElementById('initialPaymentInput');
+        const paymentFromInput = document.getElementById('paymentFromInput');
+        const paymentToInput = document.getElementById('paymentToInput');
+        const propertyCostInput = document.getElementById('propertyCostInput');
         const sendFinalBtn = document.getElementById('sendFinal');
         const formTitle = document.getElementById('formTitle');
         const formSub = document.getElementById('formSub');
@@ -820,6 +865,12 @@
             budgetInput.value = '';
             locationInput.value = '';
             roomsSelect.value = '';
+            sellTimingInput.value = '';
+            initialPaymentInput.value = '';
+            paymentFromInput.value = '';
+            paymentToInput.value = '';
+            propertyCostInput.value = '';
+            meetingDealGroup.querySelectorAll('.yesno-btn').forEach(b => b.classList.remove('selected-yes', 'selected-no'));
             extraFields.classList.remove('visible');
             
             showStep(1);
@@ -880,11 +931,47 @@
         }
 
         function updateExtraFields() {
+            // Скрываем все специфичные блоки
+            locationField.style.display = 'none';
+            sellFields.style.display = 'none';
+            mtgFields.style.display = 'none';
+
+            // Показываем нужные
             if (selectedType === 'buy' || selectedType === 'sell') {
                 locationField.style.display = 'block';
-            } else {
-                locationField.style.display = 'none';
             }
+            if (selectedType === 'sell') {
+                sellFields.style.display = 'block';
+            }
+            if (selectedType === 'mtg') {
+                mtgFields.style.display = 'block';
+            }
+        }
+
+        // Маска для суммы
+        function formatCurrency(input) {
+            let cursorPos = input.selectionStart;
+            let rawValue = input.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
+            
+            if (rawValue === '') {
+                input.value = '';
+                return '';
+            }
+            
+            let number = parseInt(rawValue, 10);
+            if (isNaN(number)) {
+                input.value = '';
+                return '';
+            }
+            
+            let formatted = number.toLocaleString('ru-RU');
+            input.value = formatted;
+            
+            let diff = input.value.length - rawValue.length;
+            if (diff > 0) {
+                input.setSelectionRange(cursorPos + diff, cursorPos + diff);
+            }
+            return formatted;
         }
 
         // Выбор цели
@@ -938,32 +1025,25 @@
             }
         });
 
-        // Бюджет (маска)
+        // Маски для сумм
         budgetInput.addEventListener('input', function() {
-            let cursorPos = this.selectionStart;
-            let rawValue = this.value.replace(/\s/g, '').replace(/[^0-9]/g, '');
-            
-            if (rawValue === '') {
-                this.value = '';
-                answers.budget = '';
-                return;
-            }
-            
-            let number = parseInt(rawValue, 10);
-            if (isNaN(number)) {
-                this.value = '';
-                answers.budget = '';
-                return;
-            }
-            
-            let formatted = number.toLocaleString('ru-RU');
-            this.value = formatted;
-            answers.budget = formatted;
-            
-            let diff = this.value.length - rawValue.length;
-            if (diff > 0) {
-                this.setSelectionRange(cursorPos + diff, cursorPos + diff);
-            }
+            answers.budget = formatCurrency(this);
+        });
+
+        initialPaymentInput.addEventListener('input', function() {
+            answers.initialPayment = formatCurrency(this);
+        });
+
+        paymentFromInput.addEventListener('input', function() {
+            answers.paymentFrom = formatCurrency(this);
+        });
+
+        paymentToInput.addEventListener('input', function() {
+            answers.paymentTo = formatCurrency(this);
+        });
+
+        propertyCostInput.addEventListener('input', function() {
+            answers.propertyCost = formatCurrency(this);
         });
 
         // Сохранение данных
@@ -973,6 +1053,18 @@
 
         locationInput.addEventListener('input', function() {
             answers.location = this.value.trim();
+        });
+
+        sellTimingInput.addEventListener('input', function() {
+            answers.sellTiming = this.value.trim();
+        });
+
+        meetingDealGroup.addEventListener('click', function(e) {
+            const btn = e.target.closest('.yesno-btn');
+            if (!btn) return;
+            this.querySelectorAll('.yesno-btn').forEach(b => b.classList.remove('selected-yes', 'selected-no'));
+            btn.classList.add(btn.dataset.value === 'yes' ? 'selected-yes' : 'selected-no');
+            answers.meetingDeal = btn.dataset.value;
         });
 
         // Отправка
@@ -1018,6 +1110,30 @@
             if (answers.location) {
                 msg += '📍 *Локация:* ' + answers.location + '\n';
             }
+            
+            // Продажа
+            if (answers.sellTiming) {
+                msg += '📅 *Сроки продажи:* ' + answers.sellTiming + '\n';
+            }
+            if (answers.meetingDeal) {
+                msg += '🤝 *Встречная сделка:* ' + (answers.meetingDeal === 'yes' ? '✅ Да' : '❌ Нет') + '\n';
+            }
+            
+            // Ипотека
+            if (answers.initialPayment) {
+                msg += '💵 *Первоначальный взнос:* ' + answers.initialPayment + ' ₽\n';
+            }
+            if (answers.paymentFrom || answers.paymentTo) {
+                let payment = '📊 *Платеж в месяц:* ';
+                if (answers.paymentFrom) payment += 'от ' + answers.paymentFrom + ' ₽';
+                if (answers.paymentFrom && answers.paymentTo) payment += ' ';
+                if (answers.paymentTo) payment += 'до ' + answers.paymentTo + ' ₽';
+                msg += payment + '\n';
+            }
+            if (answers.propertyCost) {
+                msg += '🏠 *Стоимость недвижимости:* ' + answers.propertyCost + ' ₽\n';
+            }
+            
             msg += '📞 *Телефон:* +7' + answers.phone + '\n';
             msg += '🕒 ' + new Date().toLocaleString();
 
