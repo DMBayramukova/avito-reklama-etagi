@@ -1,22 +1,51 @@
 export default {
     async fetch(request) {
+        // Обработка CORS preflight (OPTIONS) запроса
+        if (request.method === 'OPTIONS') {
+            return new Response(null, {
+                headers: {
+                    'Access-Control-Allow-Origin': '*',
+                    'Access-Control-Allow-Methods': 'POST, OPTIONS',
+                    'Access-Control-Allow-Headers': 'Content-Type',
+                },
+            });
+        }
+
         // Разрешаем только POST-запросы
         if (request.method !== 'POST') {
-            return new Response('Method Not Allowed', { status: 405 });
+            return new Response('Method Not Allowed', { 
+                status: 405,
+                headers: { 'Access-Control-Allow-Origin': '*' }
+            });
         }
 
         try {
-            const { message } = await request.json();
+            const requestData = await request.json();
+            const message = requestData.message;
+
             if (!message) {
-                return new Response('Message is required', { status: 400 });
+                return new Response(JSON.stringify({ error: 'Message is required' }), {
+                    status: 400,
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Access-Control-Allow-Origin': '*' 
+                    }
+                });
             }
 
-            // Берём переменные из окружения
-            const token = BOT_TOKEN;
-            const chatId = CHAT_ID;
+            // ПРАВИЛЬНО: переменные окружения через env
+            const token = env.BOT_TOKEN;
+            const chatId = env.CHAT_ID;
 
             if (!token || !chatId) {
-                return new Response('Server configuration error', { status: 500 });
+                console.error('BOT_TOKEN or CHAT_ID is not set in environment variables.');
+                return new Response(JSON.stringify({ error: 'Server configuration error' }), {
+                    status: 500,
+                    headers: { 
+                        'Content-Type': 'application/json', 
+                        'Access-Control-Allow-Origin': '*' 
+                    }
+                });
             }
 
             // Отправляем запрос в Telegram
@@ -33,12 +62,21 @@ export default {
 
             const data = await response.json();
             return new Response(JSON.stringify(data), {
-                headers: { 'Content-Type': 'application/json' }
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Access-Control-Allow-Origin': '*'
+                }
             });
 
         } catch (error) {
-            console.error('Error:', error);
-            return new Response('Internal Server Error', { status: 500 });
+            console.error('Worker error:', error);
+            return new Response(JSON.stringify({ error: 'Internal Server Error' }), {
+                status: 500,
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'Access-Control-Allow-Origin': '*' 
+                }
+            });
         }
     }
 };
